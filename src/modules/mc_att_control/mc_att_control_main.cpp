@@ -279,7 +279,9 @@ MulticopterAttitudeControl::Run()
 		// Check for a heading reset
 		if (prev_quat_reset_counter != _v_att.quat_reset_counter) {
 			// we only extract the heading change from the delta quaternion
-			_man_yaw_sp += Eulerf(Quatf(_v_att.delta_q_reset)).psi();
+			const Quatf delta_q_reset(_v_att.delta_q_reset);
+			_man_yaw_sp += Eulerf(delta_q_reset).psi();
+			(Quatf(_v_att_sp.q_d) * delta_q_reset).copyTo(_v_att_sp.q_d);
 		}
 
 		const hrt_abstime now = hrt_absolute_time();
